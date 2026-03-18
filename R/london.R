@@ -1,0 +1,27 @@
+#' London temperature and mortality data
+#'
+#' The dataset includes observed daily mean temperature and total number of deaths in London between 2000 and 2011. Mortality data is stratified for <75 years and 75+ years age groups. The dataset is based on the data used in Vicedo-Cabrera et al. (2019).
+#'
+#' @docType data
+#' @keywords datasets
+#' @usage data(london)
+#'
+#' @format ## `london`
+#' A tibble with 8.279 rows and 7 columns:
+#' \describe{
+#'   \item{time}{Date index}
+#'   \item{date}{Date}
+#'   \item{year}{Year}
+#'   \item{dow}{Day of the week}
+#'   \item{tmean}{Temperature mean}
+#'   \item{mort_00_74}{Mortality in the age group <75 years}
+#'   \item{mort_75plus}{Mortality in the age group +75 years}
+#'   \item{mort}{All mortality}
+#' }
+#'
+#' @source Data originally published by Vicedo-Cabrera (2019) <doi:10.1097/EDE.0000000000000982>.
+#'
+#' @references
+#' Vicedo-Cabrera A.M., Sera F., Gasparrini A. (2019). Hands-on tutorial on a modeling framework for projections of climate change impacts on health. _Epidemiology_, 30(3), 321-329. <doi:10.1097/EDE.0000000000000982>.
+#'
+"london"
