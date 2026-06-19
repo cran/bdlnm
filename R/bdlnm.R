@@ -14,7 +14,7 @@
 #' The fitted model must be a distributed lag linear or non-linear model (DLNM). DLNMs describe potentially non-linear and delayed (lagged) associations between an exposure and an outcome, commonly referred to as exposure–lag–response relationships. This modelling framework is based on the definition of a cross-basis (a bi-dimensional space of functions) constructed with [dlnm::crossbasis()], which defines the exposure–response and lag–response functions simultaneously. The cross-basis object must be created beforehand and supplied as an object in the calling environment (not as a column inside data) and explicitly included in the model formula (e.g., y ~ cb + ...). A basis object constructed with [dlnm::onebasis()] can be used instead when the model is restricted to a uni-dimensional exposure–response relationship (i.e., without lagged effects). All basis objects included in the model `formula` are stored and returned as a named list in the `basis` component. Any of these basis objects can later be supplied to [bcrosspred()] to extract predictions for the corresponding exposure–lag–response (or exposure-response, if created with `onebasis`) association.
 #'
 #' @section INLA:
-#' Models are fit using Integrated Nested Laplace approximation (INLA) via [INLA::inla()]. INLA is a method for approximate Bayesian inference. In the last years it has established itself as an alternative to other methods such as Markov chain Monte Carlo because of its speed and ease of use via the R-INLA package (\href{https://www.r-inla.org/what-is-inla}{What is INLA?}).
+#' Models are fit using Integrated Nested Laplace approximation (INLA) via [INLA::inla()]. INLA is a method for approximate Bayesian inference. In the last years it has established itself as an alternative to other methods such as Markov chain Monte Carlo because of its speed and ease of use via the R-INLA package (\href{https://www.r-inla.org/whatisinla/}{What is INLA?}).
 #'
 #' Additional arguments supplied via `...` are forwarded to [INLA::inla()] (see documentation for all available arguments). Internally, the function ensures that `control.compute = list(config = TRUE)` in order to enable posterior sample drawing with [INLA::inla.posterior.sample()].
 #'
@@ -28,8 +28,6 @@
 #' - If `NA` values occur in fixed-effect covariates, [INLA::inla()] replaces them internally with zero so that the covariate does not contribute to the linear predictor for that observation.
 #' - If `NA` values occur in a fixed-effect covariate that is a factor, this is not allowed unless `NA` is explicitly included as a level, or `control.fixed = list(expand.factor.strategy = "inla")` is specified. With this option, `NA` is interpreted similarly as in the fixed-effect case, producing no contribution from that covariate to the linear predictor.
 #' - If `NA` values occur in a random effect, the random effect does not contribute to the linear predictor for the corresponding observation.
-#'
-#' See the INLA FAQ for further details: <https://www.r-inla.org/faq#h.dbamew4fomc>.
 #'
 #' @section Posterior samples:
 #'
@@ -96,11 +94,13 @@
 #'
 #'  # Prediction values (equidistant points)
 #'  temp <- round(seq(min(london$tmean), max(london$tmean), by = 0.1), 1)
+#'  # Ensure it falls inside the range of temperatures after rounding:
+#'  temp <- temp[temp >= min(london$tmean) & temp <= max(london$tmean)]
 #'
 #' if (check_inla()) {
 #'  # Fit the model
 #'  mod <- bdlnm(mort_75plus ~ cb + factor(dow) + seas, data = london, family = "poisson",
-#'              sample.arg = list(seed = 432, seed = 1L))
+#'              sample.arg = list(n = 1000, seed = 432))
 #' }
 #'
 #'
@@ -182,9 +182,18 @@ bdlnm <- function(
     cli::cli_inform(
       c(
         "A random term has been detected in {.arg formula}, so {.arg na.action} will be ignored.",
-        "i" = "Missing values will be treated as documented in {.url https://www.r-inla.org/faq#h.dbamew4fomc}."
+        "i" = "Missing values will be treated as documented in the help page."
       )
     )
+    # add the name of the basis to its coefficient names, recreating model frame
+    # new environment in which the formula will be evaluated to reassign the renamed basis
+    eval_env <- new.env(parent = envir)
+    for (t in names(basis)) {
+      base <- basis[[t]]
+      colnames(base) <- paste0(t, colnames(base))
+      assign(t, base, envir = eval_env)
+    }
+    environment(formula) <- eval_env
   }
 
   # ----------------------------

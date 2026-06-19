@@ -92,11 +92,13 @@ This function is inspired by \code{\link[dlnm:plot.crosspred]{dlnm::plot.crosspr
 
  # Prediction values (equidistant points)
  temp <- round(seq(min(london$tmean), max(london$tmean), by = 0.1), 1)
+ # Ensure it falls inside the range of temperatures after rounding:
+ temp <- temp[temp >= min(london$tmean) & temp <= max(london$tmean)]
 
 if (check_inla()) {
  # Fit the model
  mod <- bdlnm(mort_75plus ~ cb + factor(dow) + seas, data = london, family = "poisson",
-             sample.arg = list(seed = 432, seed = 1L))
+             sample.arg = list(n = 1000, seed = 432))
 
  # Prediction
  cpred <- bcrosspred(mod, exp_at = temp)

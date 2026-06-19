@@ -84,8 +84,10 @@
 #' # Seasonality of mortality time series
 #' seas <- splines::ns(london$date, df = round(8 * length(london$date) / 365.25))
 #'
-#' # Prediction values (equidistant points)
-#' temp <- round(seq(min(london$tmean), max(london$tmean), by = 0.1), 1)
+#'  # Prediction values (equidistant points)
+#'  temp <- round(seq(min(london$tmean), max(london$tmean), by = 0.1), 1)
+#'  # Ensure it falls inside the range of temperatures after rounding:
+#'  temp <- temp[temp >= min(london$tmean) & temp <= max(london$tmean)]
 #'
 #' # Model
 #'
@@ -93,7 +95,7 @@
 #' mod <- bdlnm(mort_75plus ~ cb + factor(dow) + seas,
 #'              data = london,
 #'              family = "poisson",
-#'              sample.arg = list(seed = 432, seed = 1L))
+#'              sample.arg = list(n = 1000, seed = 432))
 #'
 #' # Predict
 #' cpred <- bcrosspred(mod, exp_at = temp)

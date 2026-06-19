@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# bdlnm
+# bdlnm <a href="https://pasahe.github.io/bdlnm/"><img src="man/figures/logo.png" align="right" height="139" alt="bdlnm website" /></a>
 
 <!-- badges: start -->
 
@@ -12,6 +12,10 @@ status](https://www.r-pkg.org/badges/version/bdlnm)](https://CRAN.R-project.org/
 [![R-CMD-check](https://github.com/pasahe/bdlnm/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/pasahe/bdlnm/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/pasahe/bdlnm/graph/badge.svg)](https://app.codecov.io/gh/pasahe/bdlnm)
+[![bdlnm downloads per
+month](https://cranlogs.r-pkg.org/badges/bdlnm)](https://cran.r-project.org/package=bdlnm)
+[![bdlnm total
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/bdlnm)](https://cran.r-project.org/package=bdlnm)
 <!-- badges: end -->
 
 The goal of `bdlnm` is to provide tools for fitting **Bayesian
